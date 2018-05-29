@@ -23,6 +23,20 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        
+        self.t = 0
+        self.state_def = [
+            ['left', 'right', 'forward'], # waypoint
+            ['red', 'green'], # traffic light status
+            ['left', 'right', 'forward', None], # vehicle left
+            ['left', 'right', 'forward', None], # vehicle right
+            ['left', 'right', 'forward', None]  # vehicle oncoming traffic
+        ]
+        
+        self.template_q = dict((k, 0.0) for k in self.valid_actions)
+        
+        for state_tuple in itertools.product(*self.state_def):
+            self.Q[state_tuple] = self.template_q.copy()
 
 
     def reset(self, destination=None, testing=False):
@@ -63,7 +77,7 @@ class LearningAgent(Agent):
         
         # Set 'state' as a tuple of relevant data for the agent        
         state = None
-
+        
         return state
 
 
@@ -159,7 +173,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True)
+    agent = env.create_agent(LearningAgent)
     
     ##############
     # Follow the driving agent
